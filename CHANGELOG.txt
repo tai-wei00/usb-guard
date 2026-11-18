@@ -1,0 +1,54 @@
+USB 哨兵 · 变更记录
+
+v2-rev6（2026-11-18，当前发布候选）
+- 许可定稿：LICENSE 改为允许在 GitHub 上 fork、禁止 GitHub 以外平台重新发布镜像/副本，
+  与 Public 仓库机制兼容，同时保留禁止商用定位；README 许可段同步。
+- 代码与 v6 相同（Home 版检测已在 rev5 修复），本版仅许可/文档变更。
+
+v2-rev5（2026-11-18）
+- 修复：系统级策略支持判断补上版本类型——Windows Home（EditionID Core*/ProductName Home）
+        即使 build >= 19041 也不再写 DeviceInstallation/RemovableStorage 策略；安装、状态提示、
+        EnforcePolicy 三处同步，避免 Home 上误报"系统级限制已开启"或状态误判。ACL 仍始终执行。
+
+v2-rev4（2026-11-18，当前发布候选）
+- 修复：安装顺序重排——先注册四个计划任务，确认「看护」与「实时进程」两个关键任务
+        都成功后，才写程序目录 ACL 与系统级策略；关键任务失败会回滚已建任务、不写策略
+        并明确报错，不再出现"策略生效但没有主程序/看护"的半装状态。
+- 修复：新增 Windows build 检查——build < 19041（Win10 2004 之前）时，安装与策略守护
+        都跳过系统级拦驱动（Sync-AllowList / EnforcePolicy 双防线），只保留报警+锁屏+看护，
+        避免信任设备也装不上驱动。
+- 修复（rev4 复核回归）：build < 19041 时状态提示.ps1 同步跳过系统级策略检查，
+        不再每 5 分钟误报"防护异常"（主进程监控/自愈照常）；程序目录 ACL 移出 build
+        分支始终执行，老版本同样防普通用户篡改看护/白名单。
+- 清理：状态提示.ps1 删除两个主程序从不创建的死状态文件（usb-guard-disabled.flag /
+        usb-guard-suspend.json）读取。
+- 清理：状态提示.vbs 改为纯 ASCII（中文文件名用 ChrW 拼接），非中文 Windows 不再乱码；
+        删除未被引用的 status-notify.vbs。
+- 文档：使用说明更新版本号、2-bat 实际流程、全局禁装+精确放行说明、家庭版/2004 限制、
+        卸载措辞；README/CSDN 稿同步。
+
+v2-rev3（2026-11-18）
+- 修复：setup.ps1 加 UTF-8 BOM，解决中文路径在 Windows PowerShell 5.1 下乱码导致
+        2-添加/3-撤销两个入口失效的问题（实测 DryRun 通过）。
+- 修复：安装前校验主程序 exe 是否存在，避免装出“策略生效但没有托盘程序”的半装状态。
+- 修复：信任设备后的策略同步——改由安装脚本 -EnforcePolicy 统一处理，不再写
+        DenyDeviceClasses 类拒绝（与 v2 设计冲突且会误伤蓝牙 HID）。
+- 修复：allow-mouse.ps1 改用 setup.ps1 -AddDevice，不再读写已废弃的 AllowDeviceIDs。
+- 修复：状态提示脚本改查 AllowInstanceIDs，日志移到 %LOCALAPPDATA%\USBGuard。
+- 修复：救援脚本按精确任务名操作，补删 AllowInstanceIDs / AllowDenyLayered。
+- 修复：白名单过滤覆盖 HID/USBSTOR 等所有实例 ID，不再只认 ^USB\。
+- 发布物：移除预编译 exe（改为自行编译）；清理内部文档；新增 LICENSE / CHANGELOG。
+
+v2（2026-11-15 ~ 11-17）
+- 陌生设备分类报警、立即/持续锁屏、白名单结构化迁移。
+- 多杀软扫描（卡巴斯基 / Defender）、设备管理窗口、暂停/维修模式。
+- 系统级策略按实例 ID 放行（AllowInstanceIDs）+ AllowDenyLayered。
+- 四个计划任务：看护、策略守护、状态提示、实时进程。
+
+已知边界（当前版本）
+- 系统级策略要求 Windows 10 2004+ 且 Pro/Enterprise/Education/LTSC；家庭版只保证报警锁屏。
+- 暂停/维修为内存态，重启不持久。
+- 键鼠全部被锁时无法双击救援脚本，需远程桌面 / WinRE / PS/2 等外部手段。
+- 仓库不提供预编译 exe，需先运行 源码\编译.bat。
+
+状态：待虚拟机验收。参见内部验收清单（不随发布包分发）。
