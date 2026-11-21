@@ -4,14 +4,12 @@
 
 **不联网、不收集数据、零第三方依赖。** 全部是 .NET Framework 自带程序集，源码在 `程序文件\源码\`，可自行审查和编译。
 
-## ⛔ 发布状态：源码版，需自行编译（无预编译 exe）
+## 发布状态：Release 提供预编译 exe + 完整源码；仓库仅源码
 
-本仓库**不提供编译好的 exe**。原因：
+- **想直接用**：到 Releases 下载 `usb-guard-v10.zip`，解压后双击 `1-装好就能用.bat` 安装。包内 `程序文件\\UsbGuard.exe` 是预编译 exe，SHA-256 记在 `build-manifest.json`，可用 `Get-FileHash` 核对。**注意**：exe 未签名，SmartScreen / 杀软（尤其卡巴斯基）可能误报——未签名安全工具通病，核对哈希后按需放行，或自行编译。
+- **想自己编译**：本仓库只放源码、不放 exe。装 .NET Framework 4（Win10/11 自带），双击 `程序文件\\源码\\编译.bat`——它按 `sources.list.txt` 的明确清单编译（不用 `*.cs` 通配符），并做版本/哈希/源集合核验，产出 `UsbGuard.next.exe`。不需要 Visual Studio。
 
-1. 未签名的 exe 会被 SmartScreen / 杀软误报，安全工具尤其如此；
-2. 源码是唯一可信交付物——你自己编一份，才能确认运行的就是你审过的代码。
-
-**编译方式**：装了 .NET Framework 4（Win10/11 自带）后，双击 `程序文件\源码\编译.bat`，产出 `UsbGuard.next.exe`，再双击 `1-装好就能用.bat` 安装。不需要 Visual Studio。
+两种交付方式源码相同；自己编译才能 100% 确认运行的就是你审过的代码。
 
 ## ⚠ 使用前必读
 
