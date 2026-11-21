@@ -1,17 +1,19 @@
 @echo off
+setlocal
 cd /d "%~dp0"
 net session >nul 2>&1
 if errorlevel 1 (
   powershell -NoProfile -Command "Start-Process -FilePath '%~f0' -Verb RunAs"
   exit /b
 )
-echo ============================================
-echo   USB Guard - Add a new device
-echo ============================================
-echo.
-echo The installer will list USB devices currently connected
-echo that are not trusted yet, and ask you to confirm.
-echo.
-powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0setup.ps1" -AddDevice
-echo.
+echo Review every full instance ID. Enter Y only for the device you intend to trust.
+echo USB lock stays enabled. Cancellation or save failure leaves the list unchanged.
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0install.ps1" -AddDevice
+if errorlevel 1 (
+  echo [X] Add-device operation failed or was cancelled. The list was not changed.
+  pause
+  exit /b 1
+)
+echo [OK] Only explicitly confirmed and successfully saved entries were applied.
 pause
+exit /b 0

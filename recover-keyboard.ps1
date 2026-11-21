@@ -1,37 +1,44 @@
-﻿$ErrorActionPreference = 'SilentlyContinue'
+$ErrorActionPreference = 'SilentlyContinue'
 $log = @()
 function Log($m){ $global:log += $m; Write-Output $m }
 
-# 1. Disable ONLY this tool's own scheduled tasks, by exact task name.
-#    Broad matching or killing unrelated script hosts can break other software.
-$ownTasks = @('USB哨兵看护','USB哨兵策略守护','USB哨兵状态提示','USB哨兵实时进程')
-foreach ($tn in $ownTasks) {
-    $t = Get-ScheduledTask -TaskName $tn -ErrorAction SilentlyContinue
-    if ($t) {
-        Stop-ScheduledTask -TaskName $tn -ErrorAction SilentlyContinue
-        Disable-ScheduledTask -TaskName $tn -ErrorAction SilentlyContinue
-        Log ("Disabled task: " + $tn)
+# 1. Disable any scheduled task that runs the USB guard.
+#    Match by action path containing UsbGuard / USB / Guard (all ASCII, avoids Chinese).
+$all = Get-ScheduledTask -ErrorAction SilentlyContinue
+foreach ($t in $all) {
+    $hit = $false
+    try {
+        foreach ($a in $t.Actions) {
+            $cmd = ($a.Execute + ' ' + $a.Arguments)
+            if ($cmd -match 'UsbGuard|USB|Guard') { $hit = $true; break }
+        }
+    } catch {}
+    if ($t.TaskName -match 'Guard|Usb') { $hit = $true }
+    if ($hit) {
+        Stop-ScheduledTask -TaskName $t.TaskName -ErrorAction SilentlyContinue
+        Disable-ScheduledTask -TaskName $t.TaskName -ErrorAction SilentlyContinue
+        Log ("Disabled task: " + $t.TaskName)
     }
 }
 
-# 2. Stop guard process only (this tool installs no service).
+# 2. Stop guard service + process
+Stop-Service -Name 'UsbGuard' -Force -ErrorAction SilentlyContinue
 Get-Process -Name 'UsbGuard' -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
-Log "Stopped guard process"
+Get-Process -Name 'wscript' -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+Log "Stopped guard service/process"
 
 # 3. Lift device install restriction
 $restrict = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeviceInstall\Restrictions'
 Set-ItemProperty -Path $restrict -Name 'DenyUnspecified' -Value 0 -Type DWord -Force -ErrorAction SilentlyContinue
-# 安装脚本建的是子键，必须删子键；同时清同名值兼容旧版。
-Remove-Item -Path "$restrict\AllowDeviceIDs" -Recurse -Force -ErrorAction SilentlyContinue
 Remove-ItemProperty -Path $restrict -Name 'AllowDeviceIDs' -ErrorAction SilentlyContinue
-Remove-Item -Path "$restrict\AllowInstanceIDs" -Recurse -Force -ErrorAction SilentlyContinue
-Remove-ItemProperty -Path $restrict -Name AllowDenyLayered -ErrorAction SilentlyContinue
 Remove-Item -Path "$restrict\DenyDeviceClasses" -Recurse -Force -ErrorAction SilentlyContinue
 Log "Cleared device install restriction (DenyUnspecified=0)"
 
 # 4. Re-enable blocked keyboard/mouse devices
 $targets = Get-PnpDevice -ErrorAction SilentlyContinue | Where-Object {
     $_.Status -ne 'OK' -and (
+        $_.InstanceId -match 'VID_XXXX' -or
+        $_.InstanceId -match 'VID_1EA7' -or
         $_.Class -in @('Keyboard','Mouse','HIDClass')
     )
 }

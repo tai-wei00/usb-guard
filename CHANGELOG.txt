@@ -1,6 +1,15 @@
 USB 哨兵 · 变更记录
 
-v2-rev6（2026-11-18，当前发布候选）
+v2.1.0 / v10（2026-11-20，当前发布版）
+- 代码重构：主程序拆分为 23 个 .cs 模块（GuardRuntime / SelfTests / MaintenanceService /
+  ConfigStore / WhitelistStore 等），单一职责，可独立审查。
+- 修复：鼠标/键盘被误锁时的输入救援流程；新增 GuardControl.ps1 集中管控。
+- 安全：发布包清空真实设备白名单（22 条本机设备身份）、移除真实 VID/PID 与个人路径。
+- 自检：12 项交付一致性自检全过（含 exe/清单/说明/源码哈希校验）。
+- 发布：GitHub Release v2-rev6 附件 usb-guard-v10.zip，隐私零残留。
+- 注：v10 为静态验证版（编译 + 12 项自检全过）；前一版 v9 曾完成真机安装/卸载验收。
+
+v2-rev6（2026-11-18，上一发布候选）
 - 许可定稿：LICENSE 改为允许在 GitHub 上 fork、禁止 GitHub 以外平台重新发布镜像/副本，
   与 Public 仓库机制兼容，同时保留禁止商用定位；README 许可段同步。
 - 代码与 v6 相同（Home 版检测已在 rev5 修复），本版仅许可/文档变更。

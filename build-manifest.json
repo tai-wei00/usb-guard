@@ -1,0 +1,101 @@
+{
+    "productVersion":  "2.1.0",
+    "buildDate":  "2026-11-20",
+    "exeSha256":  "4862111572DFD4A31E6F105515D8549BB9C4392BAEE6E593C12032B57241C6D8",
+    "sourceSetSha256":  "C2041A30C019E2049BD650B0F6FC0B8366AA95E64EAB9E834AA29FDA195A7A3D",
+    "usageSha256":  "14D63F7056928E829C69568F3B289FB7ED09A9BC531B992ECCC59BC8E892B0C2",
+    "sources":  [
+                    {
+                        "name":  "AlertPresenter.cs",
+                        "sha256":  "7FE48BEF535E2C0FEF438E25ECF27F5C0BA91C065C1A3D88717AD5ED9FD37EF5"
+                    },
+                    {
+                        "name":  "AssemblyInfo.cs",
+                        "sha256":  "9D77D1C88F6A40F91C8BEFDE913E6A2392C2507BCCD0F445084CFF7E132E0EF8"
+                    },
+                    {
+                        "name":  "AtomicJsonStore.cs",
+                        "sha256":  "D09D6C3BA2C0407828776081FEBB9A673916A94DE608E894A38FA9F31E9A9C35"
+                    },
+                    {
+                        "name":  "BuildInfo.cs",
+                        "sha256":  "6F9D3AD0F727A75EC70952E28BC9E5960BC650A9F29E890452B88396312382E9"
+                    },
+                    {
+                        "name":  "ConfigStore.cs",
+                        "sha256":  "9C55AAE77AB0BC6DB04DF66BB26BA7778571410CBA7BE8E9913A967F287D51CA"
+                    },
+                    {
+                        "name":  "DeviceInventory.cs",
+                        "sha256":  "0E492415CE5C22DD4D22E627C9B6705C06FE29703ED3B11E685626BB347C4AB1"
+                    },
+                    {
+                        "name":  "DeviceManagerForm.cs",
+                        "sha256":  "852B999A2ABD1D3D46811B9A3EF3E11D5D2173DA9AF12CC8725A124E59EF0170"
+                    },
+                    {
+                        "name":  "DiagnosticsStore.cs",
+                        "sha256":  "BE2A87B63BBAAEEB2399A1BE8CA4C6408D0337896D9CD883C24892A59E52D961"
+                    },
+                    {
+                        "name":  "GuardModels.cs",
+                        "sha256":  "6FFF98EBC5C6003116DE5C07A31D1FF384825AE5CB687883085C377B9A7C7726"
+                    },
+                    {
+                        "name":  "GuardRuntime.cs",
+                        "sha256":  "0B9AF65658F3FAD47E903F4A1BCAD15F5CFF57CD8692E8D86DFA487F59AE5BD0"
+                    },
+                    {
+                        "name":  "GuardStateCoordinator.cs",
+                        "sha256":  "5AA43698D93470F3ACAF47047DD146F5DB0D34852176C44FE0948DB6A9D7EA2C"
+                    },
+                    {
+                        "name":  "GuardStateStore.cs",
+                        "sha256":  "80B30BAB01B3DB789BAE8D1C70070D121F90B0E481A35EF020D5D2785AAE38A6"
+                    },
+                    {
+                        "name":  "MainForm.cs",
+                        "sha256":  "6C47E2143D05B9AA6D364938E4E60F979FC260E4F5B12927B76AAE59E91CE699"
+                    },
+                    {
+                        "name":  "MaintenanceService.cs",
+                        "sha256":  "CB7A090CE300A3A6F8B64144AB24386062A1C916EFC31B2ED518860B7EC48604"
+                    },
+                    {
+                        "name":  "OperationFeedback.cs",
+                        "sha256":  "C2CD4E31E0B8693CB8AE66594E4C66B5AFA85677E3EBC4ACB14F697F08BD1D0C"
+                    },
+                    {
+                        "name":  "ProtectionControlService.cs",
+                        "sha256":  "8C490B5E321C62F903196BE394DF08F8DCE72AEE78EDE6ACE02B622ED49694E2"
+                    },
+                    {
+                        "name":  "ScanCoordinator.cs",
+                        "sha256":  "9FFA367FB0EFF62CE2171A686EB14765113230E8D5E66D00D0E888BD65CABAEF"
+                    },
+                    {
+                        "name":  "SelfTests.cs",
+                        "sha256":  "F71CD0855C565CC855AF97A3C4EBAE9ABCEB16C7EDF5CAAB05103E3A720DE268"
+                    },
+                    {
+                        "name":  "SetupTrustForm.cs",
+                        "sha256":  "648F6A726A031F6004DB9D89DAAE6F26DA843A26FFAE0403ACCE511F1324B807"
+                    },
+                    {
+                        "name":  "ShellTrayController.cs",
+                        "sha256":  "5175AD87E3F9B3E08EAA1539DFD5D04F719EFBF341785D5DAF0566F7E525C4F4"
+                    },
+                    {
+                        "name":  "SingleInstanceActivator.cs",
+                        "sha256":  "C3CC7526A05FCF794A0EEC8141944A0677C7FDF3D8C7FDAAEB97D67C23B2A547"
+                    },
+                    {
+                        "name":  "UsbGuard.cs",
+                        "sha256":  "166635E91149FC03149226DFA6D643C97D7D2F3CD48EBF90C168DE430C93B103"
+                    },
+                    {
+                        "name":  "WhitelistStore.cs",
+                        "sha256":  "2D3BAC42C1CDE660A6EEC604133CF359923061C391B6CC25BBB8DC4A1054FF7B"
+                    }
+                ]
+}

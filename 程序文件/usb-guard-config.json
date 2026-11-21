@@ -1,1 +1,1 @@
-{"lockOnUnknown":true,"persistentLock":true,"autoScanRemovable":true}
+{"lockOnUnknown":true,"persistentLock":false,"autoScanRemovable":true,"scanEngineOrder":["kaspersky","defender"]}

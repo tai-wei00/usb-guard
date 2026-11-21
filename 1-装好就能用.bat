@@ -1,16 +1,21 @@
 @echo off
-chcp 936 >nul
-title USB 哨兵 - 加固版安装
+setlocal
+title USB Guard v2.1.0 Setup
 net session >nul 2>&1
 if errorlevel 1 (
   powershell -NoProfile -Command "Start-Process -FilePath '%~f0' -Verb RunAs"
   exit /b
 )
-echo ============================================
-echo   USB 哨兵 · 加固版
-echo ============================================
-echo.
-echo 正在安装，需要几十秒，请不要关闭窗口。
-echo 原来的信任名单会保留，不会丢。
-echo.
-powershell -NoProfile -ExecutionPolicy Bypass -Command "& '%~dp0程序文件\安装.ps1'; if ($LASTEXITCODE -ne 0) { Write-Host '[X] 安装未成功完成，请看上面的红色报错，把报错发给我。'; Read-Host '按回车退出'; exit 1 } else { Write-Host '[OK] 装好了。右下角出现蓝色 U 图标就是已经保护上了。'; Read-Host '按回车退出' }"
+echo USB Guard v2.1.0 - Build 2026-11-20
+echo Existing entries are preserved during upgrade. No automatic trust is added.
+echo First-time setup requires explicit Y confirmation for each device instance.
+echo Invalid candidate version or hash will block EXE replacement.
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0install.ps1"
+if errorlevel 1 (
+  echo [X] Setup is incomplete or partially complete. Review the failed items above.
+  pause
+  exit /b 1
+)
+echo [OK] Setup and verification completed.
+pause
+exit /b 0

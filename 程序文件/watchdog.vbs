@@ -1,39 +1,38 @@
-' USB Guard watchdog - hardened
-' This file lives in a protected folder. Standard users cannot edit or move it.
+' USB Guard v2.1.0 watchdog: protected stop flag + exact executable path.
 Option Explicit
-Dim fso, sh, dir, exe, wmi, col, p, running
+Dim fso, sh, dir, exe, flag, running
 Set fso = CreateObject("Scripting.FileSystemObject")
-Set sh  = CreateObject("WScript.Shell")
-
+Set sh = CreateObject("WScript.Shell")
 dir = fso.GetParentFolderName(WScript.ScriptFullName)
 exe = dir & "\UsbGuard.exe"
-If Not fso.FileExists(exe) Then WScript.Quit
+flag = dir & "\usb-guard-disabled.flag"
+If fso.FileExists(flag) Then WScript.Quit 0
+If Not fso.FileExists(exe) Then WScript.Quit 1
 
-' No stop flag check: a writable marker can no longer disable the watchdog forever.
-running = False
-On Error Resume Next
-Set wmi = GetObject("winmgmts:\\.\root\cimv2")
-Set col = wmi.ExecQuery("SELECT ProcessId FROM Win32_Process WHERE Name='UsbGuard.exe'")
-For Each p In col
-  running = True
-Next
-If Err.Number <> 0 Then running = False
-Err.Clear
-On Error GoTo 0
-
-If Not running Then
-  sh.Run """" & exe & """", 1, False
+Function IsCurrentGuardRunning()
+  Dim wmi, items, item, found
+  found = False
   On Error Resume Next
-  sh.LogEvent 4, "UsbGuard: watchdog restarted guard"
-  ' 等 4 秒再确认一次，若仍没起来就记一条明确告警，便于定位
   Set wmi = GetObject("winmgmts:\\.\root\cimv2")
-  Set col = wmi.ExecQuery("SELECT ProcessId FROM Win32_Process WHERE Name='UsbGuard.exe'")
-  Dim up : up = False
-  For Each p In col
-    up = True
+  Set items = wmi.ExecQuery("SELECT ProcessId, ExecutablePath FROM Win32_Process WHERE Name='UsbGuard.exe'")
+  For Each item In items
+    If Not IsNull(item.ExecutablePath) Then
+      If StrComp(CStr(item.ExecutablePath), exe, vbTextCompare) = 0 Then found = True
+    End If
   Next
-  If Not up Then
-    sh.LogEvent 1, "UsbGuard: guard still not running 4s after restart (possible crash or blocked; check Event Log Application\UsbGuard)"
-  End If
+  If Err.Number <> 0 Then found = False
+  Err.Clear
+  On Error GoTo 0
+  IsCurrentGuardRunning = found
+End Function
+
+running = IsCurrentGuardRunning()
+If Not running Then
+  sh.Run """" & exe & """", 0, False
+  On Error Resume Next
+  sh.LogEvent 4, "UsbGuard: watchdog requested current-path guard restart"
+  WScript.Sleep 4000
+  If Not IsCurrentGuardRunning() Then sh.LogEvent 1, "UsbGuard: current-path guard not running after restart; check Application\UsbGuard"
   On Error GoTo 0
 End If
+WScript.Quit 0

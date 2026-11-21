@@ -64,7 +64,7 @@ CHANGELOG.txt          变更记录
   watchdog.vbs / 状态提示.vbs/.ps1
   usb-whitelist.json  信任名单（发布时为 []）
   usb-guard-config.json
-  源码\               5 个 .cs + 编译.bat
+  源码\               23 个 .cs + 编译.bat（v2.1.0 重构版）
 文档\
   需求规格.md         EARS 验收条件、异常场景、DFX
   技术设计.md         架构、状态机、提权边界（目标架构，部分落地）

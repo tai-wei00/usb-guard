@@ -1,12 +1,20 @@
 @echo off
-chcp 936 >nul
-cd /d %~dp0
-echo 正在编译 UsbGuard.next.exe ...
-"C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe" /nologo /target:winexe /platform:anycpu /optimize+ /langversion:5 /utf8output /warn:4 /out:"..\UsbGuard.next.exe" /r:System.dll /r:System.Core.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll /r:System.Management.dll /r:System.Web.Extensions.dll *.cs
-if errorlevel 1 (
-  echo.
-  echo [X] 编译失败，请看上面的报错。
-  pause
+setlocal
+for %%I in ("%~dp0..\..") do set "PROJECT_ROOT=%%~fI"
+for %%P in ("%~dp0*.ps1") do set "PUBLISH_SCRIPT=%%~fP"
+if not defined PUBLISH_SCRIPT (
+  echo [X] Release check script is missing.
   exit /b 1
 )
-echo [OK] 已生成 程序文件\UsbGuard.next.exe
+echo Building USB Guard v2.1.0 from sources.list.txt ...
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%PUBLISH_SCRIPT%" -Compile -ProjectRoot "%PROJECT_ROOT%"
+if errorlevel 1 (
+  echo [X] Build or release verification failed.
+  exit /b 1
+)
+if not exist "%PROJECT_ROOT%\UsbGuard.next.exe" (
+  echo [X] Candidate EXE was not generated.
+  exit /b 1
+)
+echo [OK] Candidate EXE and build-manifest.json were generated and verified.
+exit /b 0
